@@ -1,20 +1,35 @@
 from collections import deque
 from heapq import heappush, heappop 
 
+
+
 def shortest_shortest_path(graph, source):
-    """
-    Params: 
-      graph.....a graph represented as a dict where each key is a vertex
-                and the value is a set of (vertex, weight) tuples (as in the test case)
-      source....the source node
+    d = dict()
+    frontier = []
+  
+    y = (0,0, source)
+    heappush(frontier, y)
+
+    return short2_path(d, frontier, graph)
+
+def short2_path(d, frontier, graph):
+    l = len(frontier)
+    if l !=0 :
+        dist, edge , n= heappop(frontier)
+        if n not in d:
+            d[n] = (dist, edge)
+            for neighbor, w in graph[n]:
+              dw = dist + w
+              x = (dw, edge + 1, neighbor)
+              heappush(frontier, x)                
+        return short2_path(d, frontier, graph)
       
-    Returns:
-      a dict where each key is a vertex and the value is a tuple of
-      (shortest path weight, shortest path number of edges). See test case for example.
-    """
-    ### TODO
-    pass
-    
+        if n in d:
+            return short2_path(d, frontier, graph)
+  
+    else:
+        return d
+      
 def test_shortest_shortest_path():
 
     graph = {
@@ -35,13 +50,17 @@ def test_shortest_shortest_path():
     
     
 def bfs_path(graph, source):
-    """
-    Returns:
-      a dict where each key is a vertex and the value is the parent of 
-      that vertex in the shortest path tree.
-    """
-    ###TODO
-    pass
+    final = dict() 
+    frontier = set([source])
+    while len(frontier):
+      l = len(frontier)
+      if l != 0:
+        source = frontier.pop()
+        for n in graph[source]: 
+          if n not in final.keys():
+            final[n] = source
+            frontier.add(n)
+    return final
 
 def get_sample_graph():
      return {'s': {'a', 'b'},
@@ -66,6 +85,10 @@ def get_path(parents, destination):
       (excluding the destination node itself). See test_get_path for an example.
     """
     ###TODO
+    if destination in parents:
+        return get_path(parents, parents[destination]) + parents[destination]
+    else:
+        return ''
     pass
 
 def test_get_path():
